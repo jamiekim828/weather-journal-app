@@ -22,14 +22,27 @@ app.use(express.static('website'));
 
 // Setup Server
 const port = 8000;
+
+// Callback to debug
 const server = app.listen(port, () => {
   console.log(`running on localhost: ${port}`);
 });
 
-// Setup empty JS object to act as endpoint for all routes
-// Express to run server and routes
-// Spin up the server
-// Callback to debug
-// Initialize all route with a callback function
-// Callback function to complete GET '/all'
+// GET '/all'
+app.get('/all', getProjectData);
+
+function getProjectData(req, res) {
+  res.send(projectData);
+}
+
 // Post Route
+app.post('/adddata', addData);
+
+function addData(req, res) {
+  const newData = {
+    date: req.body.date,
+    temperature: req.body.temperature,
+    content: req.body.content
+  };
+  projectData.push(newData);
+}
