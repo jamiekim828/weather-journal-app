@@ -12,18 +12,23 @@ document.getElementById('generate').addEventListener('click', performAction);
 /* Function called by event listener */
 function performAction(e) {
   const newZip = document.getElementById('zip').value;
-  const newTemp = document.getElementById('temp').value;
   const newFeeling = document.getElementById('feelings').value;
 
-  getWeather(baseUrl, newZip, apiKey).then(function(data) {
-    console.log(data);
-    postWeather('/adddata', {
-      date: newDate,
-      newZip,
-      newTemp,
-      newFeeling
-    });
-  });
+  getWeather(baseUrl, newZip, apiKey)
+    .then(function(data) {
+      console.log('19', data);
+      postWeather('/adddata', {
+        date: newDate,
+        city: data.name,
+        country: data.sys.country,
+        weather: data.weather[0].description,
+        temp: data.main.temp,
+        wind: data.wind.speed,
+        humidity: data.main.humidity,
+        content: newFeeling
+      });
+    })
+    .then(updateUI());
 }
 
 /* Function to GET Web API Data*/
@@ -39,10 +44,9 @@ const getWeather = async (baseUrl, zip, apiKey) => {
 };
 
 /* Function to POST data */
-const postWeather = async (url = '', data = {}) => {
+const postWeather = async (url = '/adddata', data = {}) => {
   const res = await fetch(url, {
     method: 'POST',
-    mode: 'cors',
     credentials: 'same-origin',
     headers: {
       'Content-type': 'application/json'
@@ -51,25 +55,31 @@ const postWeather = async (url = '', data = {}) => {
   });
   try {
     const newData = await res.json();
-    console.log('postWeather');
-    console.log('newData', newData);
-    return newData;
+
+    console.log('58', newData);
+    // return newData;
   } catch (error) {
     console.log('error', error);
   }
 };
 
-/* Function to update UI */
-// const updateUI = async () => {
-//   const req = await fetch('/all');
-//   try {
-//     const allData = await req.json();
-//     console.log('allData', allData);
-//     document.getElementById('date').innerHTML = allData.date;
-//     document.getElementById('city').innerHTML = allData.name;
-//     // document.getElementById('temp').innerHTML = '';
-//     // document.getElementById('content').innerHTML = '';
-//   } catch (error) {
-//     console.log('error', error);
-//   }
-// };
+// /* Function to update UI */
+const updateUI = async () => {
+  const req = await fetch('/all');
+  try {
+    const allData = await req.json();
+    console.log('allData', allData);
+    document.getElementById(
+      'date'
+    ).innerHTML = `<h4>Date</h4><p>(mm/dd/yyyy)</p>${allData.date}`;
+    document.getElementById('city').innerHTML = `<h4>City</h4>${allData.city}`;
+    document.getElementById(
+      'temp'
+    ).innerHTML = `<h4>Temperature(F)</h4>${allData.temperature}`;
+    document.getElementById(
+      'content'
+    ).innerHTML = `<h4>Feeling</h4>${allData.content}`;
+  } catch (error) {
+    console.log('error', error);
+  }
+};
