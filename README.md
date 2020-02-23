@@ -25,3 +25,9 @@ This will require modifying the `server.js` file and the `website/app.js` file. 
    - Assigning Element Properties Dynamically
    - Adds an event listener to an existing HTML button from DOM using Vanilla JS
    - Dynamically Update UI
+
+# Use this Web app you need to
+
+1. clone or download this repo
+2. go to the download and run: npm start
+3. go to browser: localhost:8000
