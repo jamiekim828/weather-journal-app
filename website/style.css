@@ -1,7 +1,11 @@
+html,
 body {
   height: 100%;
-  width: 100%;
-  background: #fffff8;
+  height: 100%;
+  background: #03a17f;
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
@@ -15,7 +19,7 @@ body {
     'header  header  header'
     'content1 content2 sidebar';
   height: 100vh;
-  background: #03a17f;
+
   color: #f0d43a;
   justify-content: center;
   grid-gap: 1em;
@@ -135,4 +139,28 @@ button:focus {
   /* Microsoft Edge */
   color: #f0d43a;
   font-family: 'Oswald', sans-serif;
+}
+
+@media screen and (max-width: 992px) {
+  html,
+  body {
+    height: 100%;
+    height: 100%;
+    background: #03a17f;
+  }
+  #app {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  html,
+  body {
+    height: 100%;
+    height: 100%;
+    background: #03a17f;
+  }
+  #app {
+    display: block;
+  }
 }
