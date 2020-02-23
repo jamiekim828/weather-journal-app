@@ -25,16 +25,6 @@ var corsOptions = {
 // Cors for cross origin allowance
 app.use(cors(corsOptions));
 
-// to solve cors error???
-// app.use(function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept'
-//   );
-//   next();
-// });
-
 /* Middleware*/
 
 //Here we are configuring express to use body-parser as middle-ware.
@@ -44,23 +34,29 @@ app.use(bodyParser.json());
 // Initialize the main project folder
 app.use(express.static('website'));
 
+// Post Route
+app.post('/add', addData);
+
+function addData(req, res) {
+  console.log('req.body', req.body);
+  const newData = {
+    date: req.body.date,
+    city: req.body.city,
+    country: req.body.country,
+    description: req.body.description,
+    temperature: req.body.temp,
+    humidity: req.body.humidity,
+    content: req.body.content
+  };
+  res.send(newData);
+  projectData = newData;
+  console.log('after post projectData', projectData);
+}
+
 // GET '/all'
 app.get('/all', getProjectData);
 
 function getProjectData(req, res) {
   res.send(projectData);
-}
-
-// Post Route
-app.post('/adddata', addData);
-
-function addData(req, res) {
-  // console.log('req.body', req.body);
-  const newData = {
-    date: req.body.date,
-    city: req.body.city,
-    temperature: req.body.temp,
-    content: req.body.content
-  };
-  res.send(newData);
+  console.log('server get', projectData);
 }

@@ -17,18 +17,22 @@ function performAction(e) {
   getWeather(baseUrl, newZip, apiKey)
     .then(function(data) {
       console.log('19', data);
-      postWeather('/adddata', {
+      postWeather('/add', {
         date: newDate,
         city: data.name,
         country: data.sys.country,
-        weather: data.weather[0].description,
+        description: data.weather[0].description,
         temp: data.main.temp,
-        wind: data.wind.speed,
         humidity: data.main.humidity,
         content: newFeeling
       });
+      console.log('hi', data);
     })
-    .then(updateUI());
+    .then(
+      setTimeout(function() {
+        updateUI();
+      }, 1000)
+    );
 }
 
 /* Function to GET Web API Data*/
@@ -44,7 +48,7 @@ const getWeather = async (baseUrl, zip, apiKey) => {
 };
 
 /* Function to POST data */
-const postWeather = async (url = '/adddata', data = {}) => {
+const postWeather = async (url = '/', data = {}) => {
   const res = await fetch(url, {
     method: 'POST',
     credentials: 'same-origin',
@@ -53,32 +57,39 @@ const postWeather = async (url = '/adddata', data = {}) => {
     },
     body: JSON.stringify(data)
   });
+  console.log('postWeather data', data);
   try {
     const newData = await res.json();
-
-    console.log('58', newData);
-    // return newData;
+    console.log('post res', res);
+    console.log('post newData', newData);
+    return newData;
   } catch (error) {
     console.log('error', error);
   }
 };
 
 // /* Function to update UI */
+
 const updateUI = async () => {
-  const req = await fetch('/all');
+  const req = await fetch('/all', {
+    headers: { 'Content-type': 'application/json' },
+    body: JSON.stringify()
+  });
   try {
-    const allData = await req.json();
-    console.log('allData', allData);
+    console.log('updateUI req', req);
+    const journal = await req.json();
+    console.log('journal', journal);
+
     document.getElementById(
       'date'
-    ).innerHTML = `<h4>Date</h4><p>(mm/dd/yyyy)</p>${allData.date}`;
-    document.getElementById('city').innerHTML = `<h4>City</h4>${allData.city}`;
+    ).innerHTML = `<h4>Date</h4><p>(mm.dd.yyyy)</p>${journal.date}`;
+    document.getElementById('city').innerHTML = `<h4>City</h4>${journal.city}`;
     document.getElementById(
       'temp'
-    ).innerHTML = `<h4>Temperature(F)</h4>${allData.temperature}`;
+    ).innerHTML = `<h4>Temperature(F)</h4>${journal.temperature}`;
     document.getElementById(
       'content'
-    ).innerHTML = `<h4>Feeling</h4>${allData.content}`;
+    ).innerHTML = `<h4>Feeling</h4>${journal.content}`;
   } catch (error) {
     console.log('error', error);
   }
